@@ -19,6 +19,8 @@ class App < Sinatra::Base
     set :logger, Logger.new($stdout)
     set :bind, "0.0.0.0"
     set :port, ENV.fetch("PORT", 4567)
+    # TODO: lock this down if I get a set domain
+    set :protection, except: [:host_authorization]
   end
 
   before do
