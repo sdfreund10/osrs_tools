@@ -20,7 +20,8 @@ class App < Sinatra::Base
     set :bind, "0.0.0.0"
     set :port, ENV.fetch("PORT", 4567)
     # TODO: lock this down if I get a set domain
-    set :protection, except: [:host_authorization]
+    set :protection, except: :http_origin
+    set :allow_hosts, nil # allow all hosts (not recommended for production)
   end
 
   before do
