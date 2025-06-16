@@ -18,7 +18,7 @@ class App < Sinatra::Base
     set :views, File.dirname(__FILE__) + "/views"
     set :logger, Logger.new($stdout)
     set :bind, "0.0.0.0"
-    set :port, 4567
+    set :port, ENV.fetch("PORT", 4567)
   end
 
   before do
