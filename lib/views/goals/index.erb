@@ -1,0 +1,50 @@
+<h1>Goal Tracker</h1>
+<p>Set goals and monitor progress via Wise Old Man.</p>
+<div>
+  <div id="goal-template">
+    <h3 class="goal-name"></h3>
+    <p class="goal-value"></p>
+  </div>
+</div>
+
+<div>
+  <h3>Add New Weekly Goal</h3>
+  <form id="new-goal-form">
+
+    <select name="skill_type" id="skill-type-select">
+      <option value="herblore">Herblore</option>
+      <option value="agility">Agility</option>
+    </select>
+
+    <select name="goal_type" id="goal-type-select">
+      <option value="normal" selected="selected">Normal</option>
+      <option value="ironman">Ironman</option>
+      <option value="hardcore ironman">Hardcore Ironman</option>
+      <option value="ultimate ironman">Ultimate Ironma</option>
+    </select>
+
+    <label for="goal-input">
+    <input type="number" name="goal" id="goal-input" placeholder="What is your weekly goal?">
+
+    <button type="submit">Save</button>
+  </form>
+</div>
+
+<script>
+  const storageKey = "goals";
+
+  function retrieveGoals() {
+    localStorage.getItem("goals")
+  }
+
+  function saveGoal(goal) {
+    const savedGoals = retrieveGoals() || [];
+    savedGoals.append(goal);
+    localStorage.setItem("goals", savedGoals);
+  }
+
+  document.getElementById("new-goal-form").addEventListener('submit', (e) =>{
+    e.preventDefault();
+    const form = e.target;
+  })
+</script>

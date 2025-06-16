@@ -1,0 +1,2 @@
+#!/bin/bash
+rerun -p "lib/**/*.rb" 'ruby lib/app.rb'

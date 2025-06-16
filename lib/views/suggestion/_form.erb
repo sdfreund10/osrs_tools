@@ -1,0 +1,38 @@
+<h1>OSRS Activity Suggester</h1>
+<p>Get personalized activity recommendations for your RuneScape session</p>
+
+<form action="/suggestion" method="post">
+  <label for="username">Username</label>
+  <input type="text" name="username" placeholder="Enter your username">
+
+  <label for="time_available">Time Available</label>
+  <select name="time_available" id="time">
+    <option value="0-1 hours>">0-1 hours</option>
+    <option value="1-2 hours">1-2 hours</option>
+    <option value="2-4 hours">2-4 hours</option>
+    <option value="4+ hours">4+ hours</option>
+  </select>
+
+  <label for="account_type">Account Type</label>
+  <select name="account_type" id="account_type">
+    <option value="normal>">Normal</option>
+    <option value="ironman">Ironman</option>
+    <option value="hardcore ironman">Hardcore Ironman</option>
+    <option value="ultimate ironman">Ultimate Ironma</option>
+  </select>
+
+  <label for="intensity">Desired Intensity</label>
+  <input type="range" id="intensity" name="intensity" min="1" max="3" step="1" value="1">
+  <div style="display: flex; justify-content: space-between; font-size: 0.95em;">
+    <span>Chill</span>
+    <span>Moderate</span>
+    <span>Intense</span>
+  </div>
+
+
+  <button type="submit">
+    Get Activity Suggestions
+  </button>
+</form>
+
+<p>Powered by OSRS Hiscores API & Google Gemini</p>

@@ -1,0 +1,88 @@
+<h1>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-coins-icon lucide-coins"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>
+  GE Alchemist
+</h1> 
+<p>Find the best alchables to maximize your profit.</p>
+<small>Last Refreshed: <%= last_updated_at %>. <a href="/">Refresh</a></small>
+
+<div>
+<% items.each do |item| %>
+  <article class="table-card">
+    <div>
+      <h4>
+        <img src="<%= item.thumbnail %>"> <%# alt="<%= item.name %>
+        <%= item.name %>
+      </h4>
+    </div>
+    <div>
+      <p class="label">
+        Price
+      </p>
+      <p class="value">
+        <%= item.price_range %><br>
+      </p>
+    </div>
+    <div>
+      <p class="label">
+        Alch Price:
+      </p>
+      <p class="value">
+        <%= format_number(item.highalch) %><br>
+      </p>
+    </div>
+    <div>
+      <p class="label">
+        Profit:
+      </p>
+      <p class="value">
+        <%= format_number(item.profit) %> per alch
+      </p>
+    </div>
+    <div>
+      <p class="label">
+        Buy Limit:
+      </p>
+      <p class="value">
+        <%= format_number(item.limit)%> / 4 hours<br>
+      </p>
+    </div>
+    <div>
+      <p class="label">
+        Total Profit:
+      </p>
+      <p class="value">
+        <%= format_number(item.profit_per_trade_offer) %> per Session
+      </p>
+    </div>
+  </article>
+<% end %>
+</div>
+
+<style>
+  article.table-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      p.label {
+        font-size: 0.875rem;
+        color: var(--pico-color-amber-300);
+        margin-bottom: 0;
+      }
+
+      p.value {
+        &.highlight {
+          color: var(--pico-color-amber-300);
+          font-weight: bold;
+          margin: 0;
+        }
+      }
+    }
+  }
+</style>

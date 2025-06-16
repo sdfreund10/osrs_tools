@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alch Watch</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    >
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.colors.min.css"
+    >
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+      rel="stylesheet"
+      href="/theme.css"
+    >
+  </head>
+  <body>
+    <%= erb :_header %>
+    <main class="container">
+      <%= yield %>
+    </main>
+  </body>
+</html>
+
+<style>
+  article {
+    border: var(--pico-border-width) solid var(--pico-card-border-color);
+  }
+</style>

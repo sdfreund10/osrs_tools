@@ -1,0 +1,146 @@
+<h1>Grind Guru</h1>
+<p>Get personalized suggestions for your next OSRS grind.</p>
+
+<article id="suggestion-form-container">
+  <form id="suggestion-form" action="/suggestion" method="post">
+    <label for="username" class="pico-color-amber-300">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Username
+    </label>
+    <input type="text" name="username" id="username" placeholder="Enter your username" required>
+
+    <label for="account_type" class="pico-color-amber-300">
+      <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+        <g transform="translate(0.000000,16.000000) scale(0.100000,-0.100000)" stroke="none">
+          <path d="M72 134 c-12 -8 -22 -20 -22 -27 0 -8 3 -8 12 1 7 7 21 12 33 11 20 0 20 0 -1 -9 -24 -9 -40 -50 -19 -50 7 0 27 3 44 6 31 6 31 7 16 30 -8 13 -11 24 -5 24 5 0 10 7 10 15 0 20 -39 19 -68 -1z"/>
+          <path d="M120 45 c0 -8 7 -15 15 -15 8 0 15 7 15 15 0 8 -7 15 -15 15 -8 0 -15 -7 -15 -15z"/>
+          <path d="M73 43 c9 -2 23 -2 30 0 6 3 -1 5 -18 5 -16 0 -22 -2 -12 -5z"/>
+          <path d="M63 23 c9 -2 25 -2 35 0 9 3 1 5 -18 5 -19 0 -27 -2 -17 -5z"/>
+        </g>
+      </svg>
+      Account Type
+    </label>
+    <select name="account_type" id="account_type">
+      <option value="normal" selected="selected">Normal</option>
+      <option value="ironman">Ironman</option>
+      <option value="hardcore ironman">Hardcore Ironman</option>
+      <option value="ultimate ironman">Ultimate Ironma</option>
+    </select>
+
+    <label for="intensity" class="pico-color-amber-300">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap-icon lucide-zap"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+      Desired Intensity
+    </label>
+    <input type="range" id="intensity" name="intensity" min="1" max="5" step="1" value="3" style="accent-color: var(--pico-amber-300);">
+    <div style="display: flex; justify-content: space-between; font-size: 0.95em;">
+      <span>Chill</span>
+      <span>Moderate</span>
+      <span>Intense</span>
+    </div>
+    <%# Maybe a prompt for "what is your goal?" %>
+
+    <input type="hidden" name="authenticity_token" value="<%= session[:csrf] %>">
+    <button type="submit" id="suggestion-submit">
+      Get Activity Suggestions
+    </button>
+  </form>
+
+  <div id="suggestion-result">
+    <!-- Suggestions will be displayed here -->
+  </div>
+  <div id="error-message" class="container" style="display: none;">
+    <p class="pico-color-red-500">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert-icon lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      There was an error processing your request. Please try again.
+    </p>
+  </div>
+</article>
+
+<footer class="pico-footer">
+  <p>Powered by OSRS Hiscores API & Google Gemini</p>
+  <p>Made with <span style="color: red;">❤️</span> by <a href="https://sfreund.tools">sfreund.tools</a></p>
+</footer>
+
+<script>
+  async function handleSugestionRequest(e) {
+    e.preventDefault();
+    const form = document.getElementById('suggestion-form');
+    const formData = new FormData(form);
+
+    document.getElementById('suggestion-submit').disabled = true;
+    document.getElementById('suggestion-submit').ariaBusy = 'true';
+
+    // refresh button will be present on refreshes only
+    const previousRefreshButton = document.getElementById('refresh-button');
+    if (previousRefreshButton) {
+      previousRefreshButton.disabled = true;
+      previousRefreshButton.ariaBusy = 'true';
+    }
+
+
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'text/html' }
+    });
+    if (!response.ok) {
+      document.getElementById('suggestion-submit').disabled = false;
+      document.getElementById('suggestion-submit').ariaBusy = 'false';
+      document.getElementById('error-message').style.display = 'block';
+      document.getElementById('suggestion-result').innerHTML = '';
+      return;
+    }
+
+    const html = await response.text();
+    document.getElementById('suggestion-submit').disabled = false;
+    document.getElementById('suggestion-submit').ariaBusy = 'false';
+
+    document.getElementById('suggestion-result').innerHTML = html;
+    document.getElementById('error-message').style.display = 'none';
+    window.scrollTo({
+      top: document.getElementById('suggestion-result').offsetTop,
+      behavior: 'smooth'
+    });
+
+    // response html _should_ include this refresh button
+    const refreshButton = document.getElementById('refresh-button');
+    refreshButton.addEventListener('click', handleSugestionRequest);
+  }
+
+  document.getElementById('suggestion-form').addEventListener('submit', handleSugestionRequest);
+
+
+  document.getElementById("intensity").addEventListener("input", function() {
+    const intensity = this.value;
+
+    updateSliderFill()
+    
+    const labels = document.querySelectorAll("#suggestion-form-container div span");
+    labels.forEach((label, index) => {
+      if (index + 1 === parseInt(intensity)) {
+        label.style.fontWeight = "bold";
+      } else {
+        label.style.fontWeight = "normal";
+      }
+    });
+
+  });
+  // also change the labels
+  function updateSliderFill() {
+    console.log("Updating slider fill");
+    const intensityInput = document.getElementById("intensity");
+    const percentage = (intensityInput.value - intensityInput.min) / (intensityInput.max - intensityInput.min) * 100;
+    console.log("Updating percentage to: " + percentage);
+    document.documentElement.style.setProperty('--percentage-filled', percentage + '%');
+  }
+
+  updateSliderFill();
+</script>
+
+<style>
+  /* Style the track in WebKit browsers */
+  input[type="range"]::-webkit-slider-runnable-track {
+    /* Set --percentage-filled via javascript */
+    background: linear-gradient(to right, var(--pico-color-amber-300) 0% var(--percentage-filled), var(--pico-color-slate-300) var(--percentage-filled) 100%);
+  }
+</style>
