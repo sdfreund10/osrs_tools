@@ -22,7 +22,7 @@ class App < Sinatra::Base
     set :protection, host_authorization: {
       permitted_hosts: Array(ENV["HOST"] || [])
     }
-    set :session_secret, ENV.fetch("SESSION_SECRET") { SecureRandom.hex(64) }
+    set :session_secret, ENV.fetch("SESSION_SECRET") { "a-very-secret-key-change-this" }
   end
 
   before do
