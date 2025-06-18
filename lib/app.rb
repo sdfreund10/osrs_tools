@@ -20,6 +20,7 @@ class App < Sinatra::Base
     set :bind, "0.0.0.0"
     set :port, ENV.fetch("PORT", 4567)
     set :session_secret, ENV.fetch("SESSION_SECRET") { SecureRandom.hex(64) }
+    set :protection, except: :host_authorization # TEMP: Disable host authorization to get a working deploy
   end
 
   before do
