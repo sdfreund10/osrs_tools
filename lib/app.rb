@@ -19,15 +19,6 @@ class App < Sinatra::Base
     set :logger, Logger.new($stdout)
     set :bind, "0.0.0.0"
     set :port, ENV.fetch("PORT", 4567)
-    set :protection, host_authorization: {
-      permitted_hosts: ->(env) do
-        current_host = env["HTTP_HOST"] || env["SERVER_NAME"]
-        if current_host && !permitted_hosts.include?(current_host)
-          permitted_hosts << current_host
-        end
-        permitted_hosts
-      end
-    }
     set :session_secret, ENV.fetch("SESSION_SECRET") { SecureRandom.hex(64) }
   end
 
