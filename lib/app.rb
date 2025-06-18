@@ -20,7 +20,7 @@ class App < Sinatra::Base
     set :bind, "0.0.0.0"
     set :port, ENV.fetch("PORT", 4567)
     set :session_secret, ENV.fetch("SESSION_SECRET") { SecureRandom.hex(64) }
-    set :protection, except: :host_authorization # TEMP: Disable host authorization to get a working deploy
+    set :host_authorization, {permitted_hosts: []}
   end
 
   before do
@@ -83,6 +83,11 @@ class App < Sinatra::Base
   # User inputs goals, then compares them to WiseOldMan's progress, with a history chart
   get "/goals" do
     erb :"goals/index"
+  end
+
+  get "/health" do
+    status 204
+    "ok"
   end
 
   # endpoint osrs chores endpoint for tracking weekly progress (ex: 100 zulrah kc/week, 50k agility/week)
