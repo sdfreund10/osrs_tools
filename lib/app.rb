@@ -20,9 +20,15 @@ class App < Sinatra::Base
     set :bind, "0.0.0.0"
     set :port, ENV.fetch("PORT", 4567)
     set :protection, host_authorization: {
-      permitted_hosts: Array(ENV["HOST"] || [])
+      permitted_hosts: ->(env) do
+        current_host = env["HTTP_HOST"] || env["SERVER_NAME"]
+        if current_host && !permitted_hosts.include?(current_host)
+          permitted_hosts << current_host
+        end
+        permitted_hosts
+      end
     }
-    set :session_secret, ENV.fetch("SESSION_SECRET") { "a-very-secret-key-change-this" }
+    set :session_secret, ENV.fetch("SESSION_SECRET") { SecureRandom.hex(64) }
   end
 
   before do
@@ -97,5 +103,9 @@ class App < Sinatra::Base
   #   Use GE prices, filter items that are actively traded, compare prices
 
   # maybe move to a config.ru for deploys?
-  run! if app_file == $0
+  if app_file == $0
+    logger.info "Starting..."
+    logger.info ENV
+    run!
+  end
 end
