@@ -56,7 +56,7 @@ class Item
   end
 
   def actively_traded?
-    return false if price.nil?
+    return false if price&.trade_volume.nil? || limit.nil?
 
     price.trade_volume > (limit / 2) # kinda arbitrary, but this is just a significant portion of the trade limit
   end

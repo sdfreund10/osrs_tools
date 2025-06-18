@@ -1,0 +1,2 @@
+#!/bin/bash
+bundle exec functions-framework-ruby --source=lib/main.rb --target=app --port=4567

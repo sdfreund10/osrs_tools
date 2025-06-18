@@ -3,16 +3,20 @@
 FROM ruby:3.3
 
 # Install production dependencies.
-WORKDIR /usr/src/app
+WORKDIR /app
 COPY Gemfile Gemfile.lock ./
 ENV BUNDLE_FROZEN=true
-RUN gem install bundler && bundle config set --local without 'test'
+RUN gem install --no-document bundler \
+  && bundle config --local frozen true \
+  && bundle config --local without "development test" \
+  && bundle install
 
 # Copy local code to the container image.
 COPY . ./
-RUN bundle install
 
-EXPOSE 4567
+EXPOSE 8080
+ENV PORT=8080
 
 # Run the web service on container startup.
-CMD ["ruby", "lib/app.rb"]
+ENTRYPOINT ["bundle", "exec", "functions-framework-ruby"]
+CMD ["--target", "app", "--port", "8080", "--source", "lib/main.rb"]

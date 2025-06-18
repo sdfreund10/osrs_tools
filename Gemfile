@@ -6,6 +6,7 @@ gem "sinatra", "~> 4.1"
 gem "sinatra-contrib", "~> 4.1" # Add this, matching the Sinatra version
 gem "rack-protection"
 gem "dotenv", "~> 3.1"
+gem "functions_framework", "~> 1.6"
 
 gem "httparty"
 
