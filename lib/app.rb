@@ -14,6 +14,7 @@ class App < Sinatra::Base
   helpers Sinatra::CustomLogger
 
   configure do
+    set :environment, ENV.fetch("RACK_ENV", "development").to_sym
     set :root, File.dirname(__FILE__)
     set :views, File.dirname(__FILE__) + "/views"
     set :logger, Logger.new($stdout)
