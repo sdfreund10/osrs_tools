@@ -38,6 +38,24 @@ class Price
     high_volume + low_volume
   end
 
+  def margin
+    return 0 if high_price.nil? || low_price.nil?
+
+    high_price - low_price
+  end
+
+  def post_tax_margin
+    return 0 if high_price.nil?
+
+    margin - high_price * 0.02
+  end
+
+  def profit_potential
+    return 0 unless post_tax_margin.positive?
+
+    post_tax_margin * (item.trade_limit || 0)
+  end
+
   # { "data": {
   #   "2": {
   #     "avgHighPrice":228,"highPriceVolume":1338882,"avgLowPrice":218,"lowPriceVolume":484258

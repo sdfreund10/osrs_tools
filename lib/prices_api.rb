@@ -19,6 +19,10 @@ class PricesApi
     @offline = false
   end
 
+  def get(url)
+    HTTParty.get(url, headers: {"User-Agent" => "https://github.com/sdfreund10/osrs_tools"})
+  end
+
   def items
     return @items unless @last_fetch_times[:items].nil? || @last_fetch_times[:items] < (Time.now - 60 * 60)
 
@@ -28,7 +32,7 @@ class PricesApi
       JSON.parse(File.read(offline_file))
     else
       puts "fetching items"
-      HTTParty.get(ITEM_MAPPING_URL)
+      get(ITEM_MAPPING_URL)
     end
   end
 
@@ -42,7 +46,7 @@ class PricesApi
       JSON.parse(File.read(offline_file))
     else
       puts "fetching prices"
-      HTTParty.get(FIVE_MINUTE_PRICES)["data"]
+      get(FIVE_MINUTE_PRICES)["data"]
     end
   end
 
@@ -69,7 +73,7 @@ class PricesApi
       JSON.parse(File.read(offline_file))
     else
       puts "fetching one hour prices"
-      HTTParty.get(ONE_HOUR_PRICES)["data"]
+      get(ONE_HOUR_PRICES)["data"]
     end
   end
 

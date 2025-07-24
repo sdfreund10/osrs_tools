@@ -10,6 +10,17 @@ class ActivitySuggestion
     @intensity = intensity
   end
 
+  def suggest_from_prompt(prompt, answer)
+    GeminiClient.new(
+      user_prompt: user_prompt.merge({additional_details: answer}).to_json,
+      return_schema: gemini_schema,
+      system_prompt: <<~PROMPT
+        #{system_prompt}
+        Additionally, the player was asked "#{prompt}" the answer to which was provided in the "additional_details" field. Ideally your response should build towards the goals described in the answer.
+      PROMPT
+    ).generate_content
+  end
+
   def suggestions
     puts "Fetching suggestions for player: #{@player_name}, account type: #{@account_type}, intensity: #{@intensity}"
     GeminiClient.new(

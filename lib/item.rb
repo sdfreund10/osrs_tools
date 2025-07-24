@@ -41,7 +41,7 @@ class Item
     price&.instant_sell_price
   end
 
-  def profit
+  def alch_profit
     return 0 if price.nil? || price.instant_buy_price.nil? # maybe this needs a fallback to the buy sell price for higher-volume items?
     return 0 if highalch.nil?
 
@@ -50,6 +50,8 @@ class Item
     puts "Name=#{name}, ID=#{id}, highalch=#{highalch}, price=#{price.instant_buy_price} - Error fetching price data"
     raise e
   end
+
+  alias_method :profit, :alch_profit
 
   def profitable?
     profit.positive?

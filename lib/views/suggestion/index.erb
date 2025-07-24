@@ -27,17 +27,21 @@
       <option value="ultimate ironman">Ultimate Ironma</option>
     </select>
 
+    <label for="long_term_goals" class="pico-color-amber-300">What are your long term goals? (optional)</label>
+    <input type="text" name="long_term_goals" placeholder="Enter long term goals">
+
     <label for="intensity" class="pico-color-amber-300">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap-icon lucide-zap"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
       Desired Intensity
     </label>
+
+
     <input type="range" id="intensity" name="intensity" min="1" max="5" step="1" value="3" style="accent-color: var(--pico-amber-300);">
     <div style="display: flex; justify-content: space-between; font-size: 0.95em;">
       <span>Chill</span>
       <span>Moderate</span>
       <span>Intense</span>
     </div>
-    <%# Maybe a prompt for "what is your goal?" %>
 
     <input type="hidden" name="authenticity_token" value="<%= session[:csrf] %>">
     <button type="submit" id="suggestion-submit">

@@ -14,6 +14,7 @@ class App < Sinatra::Base
   helpers Sinatra::CustomLogger
 
   configure do
+    # be sure to set the RACK_ENV in deployed environments. I guess rack protection locks to allowed hosts localhost
     set :environment, ENV.fetch("RACK_ENV", "development").to_sym
     set :root, File.dirname(__FILE__)
     set :views, File.dirname(__FILE__) + "/views"
@@ -68,17 +69,16 @@ class App < Sinatra::Base
 
   post "/suggestion" do
     intensity = {1 => "Low", 2 => "Low-Medium", 3 => "Medium", 4 => "Medium-High", 5 => "High"}[params["intensity"].to_i]
-    suggestions = ActivitySuggestion.new(player_name: params["username"], account_type: params["account_type"], intensity: intensity).suggestions.shuffle
+    suggestions = if params["long_term_goals"].nil?
+      ActivitySuggestion.new(player_name: params["username"], account_type: params["account_type"], intensity: intensity).suggestions
+    else
+      ActivitySuggestion.new(player_name: params["username"], account_type: params["account_type"], intensity: intensity).suggest_from_prompt("What are your long term goals?", params["long_term_goals"])
+    end
     erb :"suggestion/show", locals: {suggestions: suggestions}, layout: false
   rescue ActivitySuggestion::InvalidPlayerError => e
     logger.error "Error fetching suggestions: #{e.message}"
     status 400
     e.message
-  end
-
-  # User can dismiss suggestion and replace it with a new one
-  #   Is this worthwhile? Why not just regenerate a new set of suggestions?
-  post "/suggestions/refresh" do
   end
 
   # User inputs goals, then compares them to WiseOldMan's progress, with a history chart
@@ -99,6 +99,14 @@ class App < Sinatra::Base
 
   # Best giants foundry items
   #   Use GE prices, filter items that are actively traded, compare prices
+
+  # Better BIS table - pul player stats and compare common weapons in low defense contexts
+
+  # Flipping Algo
+  #   Start with high-volume items, filter by margin and volatility, then sort by ROI
+  #   24h margin compared to 7-day volatility?
+  #   Filter by 95 percentile to ignore huge random spikes
+  #   Only consider items with buy_limit * max roi above a certain level
 
   # maybe move to a config.ru for deploys?
   if app_file == $0
